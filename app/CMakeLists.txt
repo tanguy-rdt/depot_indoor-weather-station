@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(BOARD stm32f746g_disco)
+set(BOARD nucleo_wb55rg)
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 set(ZEPHYR "ZEPHYR" CACHE INTERNAL "")
 
