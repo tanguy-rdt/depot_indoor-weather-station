@@ -5,16 +5,6 @@ message(STATUS "THIRD_PARTY_DIR: ${THIRD_PARTY_DIR}")
 message(STATUS "CONFIG_DIR: ${CONFIG_DIR}")
 
 
-# SIMU
-option(SIMU "Use simulator mode" ON)
-set(SIMU ${SIMU} CACHE INTERNAL "Use simu mode")
-
-
-# STUB
-option(STUB "Use stub mode" ON)
-set(STUB ${STUB} CACHE INTERNAL "Use stub mode")
-
-
 # ADD LVGL THIRD-PARTY
 add_subdirectory(${THIRD_PARTY_DIR}/lvgl)
 
@@ -65,6 +55,18 @@ set(INCLUDE_DIRS
 add_executable(iws ${SRC})
 target_include_directories(iws PUBLIC ${LVGL_HEADERS} ${INCLUDE_DIRS})
 target_link_libraries(iws PRIVATE pthread SDL2::SDL2 lv_drivers lvgl)
+
+
+# SIMU
+option(SIMU "Use simulator mode" ON)
+set(SIMU ${SIMU} CACHE INTERNAL "Use simu mode")
+target_compile_definitions(iws PUBLIC SIMU=1)
+
+
+# STUB
+option(STUB "Use stub mode" ON)
+set(STUB ${STUB} CACHE INTERNAL "Use stub mode")
+target_compile_definitions(iws PUBLIC STUB=1)
 
 
 # BUILD OPT

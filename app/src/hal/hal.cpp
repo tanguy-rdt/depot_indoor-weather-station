@@ -2,6 +2,8 @@
 
 #ifdef STUB
     #include "hal_stub.h"
+#else 
+    #error "No HAL type specified"
 #endif
 
 

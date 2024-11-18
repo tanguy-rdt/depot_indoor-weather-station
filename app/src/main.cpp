@@ -6,7 +6,12 @@
 LOG_MODULE_REGISTER(main);
 #endif
 
-int main(void)
-{    
+#include "hal.h"
+#include "lvgl.h"
+
+int main() {    
+   Hal hal;
+   hal.init();
+   
    return 0;
 }
