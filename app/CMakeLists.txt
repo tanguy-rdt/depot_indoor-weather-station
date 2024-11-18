@@ -1,44 +1,29 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(BOARD nucleo_wb55rg)
-find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
-set(ZEPHYR "ZEPHYR" CACHE INTERNAL "")
-
-project(template    VERSION 1.0
-                    DESCRIPTION "Template zephyr application"
-                    LANGUAGES CXX C)
+project(iws VERSION 1.0
+            DESCRIPTION "Indoor Weather Station"
+            LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG") # cmake -DCMAKE_BUILD_TYPE=Release ..
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG") # cmake -DCMAKE_BUILD_TYPE=Debug ..
+set(ROOT_DIR         "${CMAKE_SOURCE_DIR}")
+set(THIRD_PARTY_DIR  "${ROOT_DIR}/third-party")
+set(CONFIG_DIR       "${ROOT_DIR}/config")
+set(CMAKE_DIR        "${ROOT_DIR}/cmake")
 
-#
-# ADD .cpp & .h
-# 
+option(IWS_SIMU "IWS simulator target" OFF)
+option(IWS_MINIMAL   "IWS minimal (zephyr) target" OFF)
 
-set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+if(IWS_SIMU)
+    include(${CMAKE_DIR}/iws_simu.cmake)
+elseif(IWS_MINIMAL)
+    include(${CMAKE_DIR}/iws_minimal.cmake)
+else()
+    message(FATAL_ERROR "No valid target specified. Use -DIWS_SIMU or -DIWS_MINIMAL")
+endif()
 
-file(GLOB_RECURSE SRC
-    ${SRC_DIR}/*.cpp
-    ${SRC_DIR}/*.c
-)
-
-file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
-set(INCLUDE_DIRS "")
-foreach(HEADER_FILE ${HEADER_FILES})
-    get_filename_component(HEADER_DIR ${HEADER_FILE} PATH)
-    list(APPEND INCLUDE_DIRS ${HEADER_DIR})
-endforeach()
-list(REMOVE_DUPLICATES INCLUDE_DIRS)
-
-
-#
-# LINK IN ZEPHYR APP
-# 
-
-target_sources(app PRIVATE ${SRC})
-target_include_directories(app PRIVATE ${INCLUDE_DIRS})
+# BUILD PATH
+message(STATUS "BUILD_DIR: ${CMAKE_BINARY_DIR}")

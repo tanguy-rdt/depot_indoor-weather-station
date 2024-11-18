@@ -1,0 +1,6 @@
+[submodule "app/third-party/lvgl"]
+	path = app/third-party/lvgl
+	url = git@github.com:lvgl/lvgl.git
+[submodule "app/third-party/lv_drivers"]
+	path = app/third-party/lv_drivers
+	url = git@github.com:lvgl/lv_drivers.git
