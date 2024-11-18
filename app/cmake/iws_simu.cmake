@@ -48,10 +48,16 @@ set(SRC_DIR ${ROOT_DIR}/src)
 
 set(SRC
     ${SRC_DIR}/main.cpp
+    ${SRC_DIR}/hal/hal.cpp
+    ${SRC_DIR}/hal/hal_stub/hal_stub.cpp
+    ${SRC_DIR}/hal/hal_stub/display/display.cpp
 )
 
 set(INCLUDE_DIRS
     ${SRC_DIR}
+    ${SRC_DIR}/hal
+    ${SRC_DIR}/hal/hal_stub
+    ${SRC_DIR}/hal/hal_stub/display
 )
 
 
