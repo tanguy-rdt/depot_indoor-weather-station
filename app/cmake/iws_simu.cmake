@@ -41,6 +41,9 @@ set(SRC
     ${SRC_DIR}/hal/hal.cpp
     ${SRC_DIR}/hal/hal_stub/hal_stub.cpp
     ${SRC_DIR}/hal/hal_stub/display/display.cpp
+    ${SRC_DIR}/hal/hal_stub/display/background/simu_bg_black.c
+    ${SRC_DIR}/hal/hal_stub/display/background/simu_bg_white.c
+    ${SRC_DIR}/gui/gui.cpp
 )
 
 set(INCLUDE_DIRS
@@ -48,6 +51,8 @@ set(INCLUDE_DIRS
     ${SRC_DIR}/hal
     ${SRC_DIR}/hal/hal_stub
     ${SRC_DIR}/hal/hal_stub/display
+    ${SRC_DIR}/hal/hal_stub/display/background
+    ${SRC_DIR}/gui
 )
 
 

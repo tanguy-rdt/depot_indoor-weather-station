@@ -9,12 +9,16 @@ class Display {
         ~Display();
 
         void init();
-        
-    private:
-        lv_disp_t* _disp;
+        void setBacklightLevel(int percent);
 
+    private:
         void createDisplayBuffer();
         void createDisplay();
+        void initDummyCircleDisplay();
+        void initDummyBacklight();
+
+        lv_disp_t* _disp;
+        lv_obj_t*  _dummyBacklight;
 };
 
 #endif // DISPLAY_H

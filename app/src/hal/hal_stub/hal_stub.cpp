@@ -35,3 +35,7 @@ void HalStub::init() {
     END_TICK = false;
     pthread_create(&THR_TICK, NULL, tick_thread, NULL);
 }
+
+void HalStub::setDisplayBrightness(int percent) {
+    _display->setBacklightLevel(percent);
+}

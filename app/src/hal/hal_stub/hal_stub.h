@@ -14,10 +14,11 @@ public:
     ~HalStub();
 
     void init();
+    void setDisplayBrightness(int percent);
 
 private:
     std::unique_ptr<Display> _display;
-    
+
 };
 
 
