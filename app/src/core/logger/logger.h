@@ -4,6 +4,7 @@
 #include "itf_logger.h"
 #include "singleton.h"
 
+#include <cstdarg>
 
 namespace Core {
 
@@ -30,6 +31,7 @@ public:
 
     static void setLevel(LogLevel level);
     static void log(LogLevel level, const std::string& message);
+    static void log(LogLevel level, const std::string& message, va_list args);
 
 private:
     Logger();

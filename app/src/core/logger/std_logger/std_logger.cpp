@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <ctime>
+#include <vector>
 
 
 #define DEFAULT_COLOR "\033[0m"
@@ -34,11 +35,22 @@ void StdLogger::setLevel(LogLevel level) {
     _level = level;
 }
 
-void StdLogger::log(LogLevel level, const std::string& message) {
-     if (level >= _level) {
+void StdLogger::log(LogLevel level, const std::string& message, va_list args) {
+    if (level >= _level) {
+        const char* c_format = message.c_str();
+
+        va_list args_copy;
+        va_copy(args_copy, args);
+        int size = std::vsnprintf(nullptr, 0, c_format, args_copy);
+        va_end(args_copy);
+
+        std::vector<char> buffer(size + 1);
+        std::vsnprintf(buffer.data(), buffer.size(), c_format, args);
+
         std::cout << levelToColor(level) << levelToStyle(level)
-                  << "[" << getTimestamp() << "] -- " << levelToString(level) << " : " << message 
-                  << DEFAULT_STYLE << DEFAULT_COLOR << std::endl;
+                    << "[" << getTimestamp() << "] -- " << levelToString(level) << " : "
+                    << buffer.data()
+                    << DEFAULT_STYLE << DEFAULT_COLOR << std::endl;
     }
 }
 

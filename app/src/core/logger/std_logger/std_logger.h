@@ -18,7 +18,7 @@ public:
     ~StdLogger();
 
     void setLevel(LogLevel level);
-    void log(Level level, const std::string& message);
+    void log(Level level, const std::string& message, va_list args);
 
 private:
     std::string levelToString(LogLevel level) const;

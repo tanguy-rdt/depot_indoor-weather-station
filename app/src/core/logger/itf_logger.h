@@ -2,6 +2,7 @@
 #define ITF_LOGGER_H
 
 #include <string>
+#include <cstdarg>
 
 
 /**
@@ -43,7 +44,7 @@ class ItfLogger {
         * @param level The severity level of the log message.
         * @param message The message to log.
         */
-        virtual void log(Level level, const std::string& message) = 0;
+        virtual void log(Level level, const std::string& message, va_list args) = 0;
 };
 
 

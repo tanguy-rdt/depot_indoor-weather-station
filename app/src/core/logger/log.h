@@ -1,6 +1,8 @@
 #ifndef LOG_H
 #define LOG_H
 
+#include <cstdarg>
+
 #include "logger.h"
 
 
@@ -28,8 +30,11 @@ inline void level(LogLevel level) {
  * @brief Logs a debug-level message.
  * @param msg The message to log.
  */
-inline void debug(const std::string& msg) {
-    Core::Logger::log(LogLevel::Debug, msg);
+inline void debug(const std::string& msg, ...) {
+    va_list args;
+    va_start(args, msg);
+    Core::Logger::log(LogLevel::Debug, msg, args);
+    va_start(args, msg);
 }
 
 
@@ -37,8 +42,11 @@ inline void debug(const std::string& msg) {
  * @brief Logs an info-level message.
  * @param msg The message to log.
  */
-inline void info(const std::string& msg) {
-    Core::Logger::log(LogLevel::Info, msg);
+inline void info(const std::string& msg, ...) {
+    va_list args;
+    va_start(args, msg);
+    Core::Logger::log(LogLevel::Info, msg, args);
+    va_start(args, msg);
 }
 
 
@@ -46,8 +54,11 @@ inline void info(const std::string& msg) {
  * @brief Logs an warn-level message.
  * @param msg The message to log.
  */
-inline void warn(const std::string& msg) {
-    Core::Logger::log(LogLevel::Warning, msg);
+inline void warn(const std::string& msg, ...) {
+    va_list args;
+    va_start(args, msg);
+    Core::Logger::log(LogLevel::Warning, msg, args);
+    va_start(args, msg);
 }
 
 
@@ -55,8 +66,11 @@ inline void warn(const std::string& msg) {
  * @brief Logs an error-level message.
  * @param msg The message to log.
  */
-inline void error(const std::string& msg) {
-    Core::Logger::log(LogLevel::Error, msg);
+inline void error(const std::string& msg, ...) {
+    va_list args;
+    va_start(args, msg);
+    Core::Logger::log(LogLevel::Error, msg, args);
+    va_start(args, msg);
 }
 
 
@@ -64,8 +78,11 @@ inline void error(const std::string& msg) {
  * @brief Logs an critical-level message.
  * @param msg The message to log.
  */
-inline void critical(const std::string& msg) {
-    Core::Logger::log(LogLevel::Error, msg);
+inline void critical(const std::string& msg, ...) {
+    va_list args;
+    va_start(args, msg);
+    Core::Logger::log(LogLevel::Error, msg, args);
+    va_start(args, msg);
 }
 
 } // Log
