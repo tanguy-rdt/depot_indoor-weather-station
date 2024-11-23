@@ -6,6 +6,8 @@
 LOG_MODULE_REGISTER(main);
 #endif
 
+#include "log.h"
+
 #include "hal.h"
 #include "gui.h"
 
@@ -14,6 +16,9 @@ LOG_MODULE_REGISTER(main);
 
 int main() {    
    lv_init();
+
+   Log::level(LogLevel::DEBUG);
+   Log::info("Hello info");
 
    Hal hal;
    hal.init();
