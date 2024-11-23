@@ -7,6 +7,7 @@ LOG_MODULE_REGISTER(main);
 #endif
 
 #include "hal.h"
+#include "gui.h"
 
 #include "lvgl.h"
 #include <unistd.h>
@@ -17,10 +18,8 @@ int main() {
    Hal hal;
    hal.init();
 
-
-        lv_obj_t* label = lv_label_create(lv_scr_act());
-        lv_label_set_text(label, "Hello, Round Screen!");
-        lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+   Gui gui;
+   gui.init();
 
    while (true) {
       uint32_t ms_delay = lv_timer_handler();

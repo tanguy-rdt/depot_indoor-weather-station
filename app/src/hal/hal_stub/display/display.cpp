@@ -76,7 +76,7 @@ void Display::createDisplay() {
 
 void Display::initDummyCircleDisplay() {
     lv_style_init(&_styleBackground);
-    lv_style_set_bg_img_src(&_styleBackground, &simu_bg_white);
+    lv_style_set_bg_img_src(&_styleBackground, &simu_bg_black);
     lv_obj_add_style(lv_scr_act(), &_styleBackground, 0);
 }
 
