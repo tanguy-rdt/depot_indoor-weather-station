@@ -1,5 +1,6 @@
 #include "circular_indicator.h"
 
+#include "log.h"
 #include "coord_converter.h"
 
 #define OFFSET_LVGL_ANGLE 90
@@ -63,6 +64,11 @@ CircularIndicator::~CircularIndicator() {
  * @param max Maximal range.
  */
 void CircularIndicator::setRange(float min, float max){
+    if ( min >= max ) {
+        Log::warn("CircularIndicator -- min (%.2f) value must be lower than max (%.2f) value", min, max);
+        return;
+    }
+
     _min = min;
     _max = max;
 }
@@ -74,13 +80,16 @@ void CircularIndicator::setRange(float min, float max){
  * @param colors Colour vectors.
  */
 void CircularIndicator::setColors(const std::vector<lv_color_t>& colors) {
+    if ( colors.size() > LV_GRADIENT_MAX_STOPS )
+        Log::warn("CircularIndicator -- too many colors (%d) for the gradient, max: %d", colors.size(), LV_GRADIENT_MAX_STOPS);
+
     _grad.bg_opa = LV_OPA_COVER;
     _grad.bg_grad.dir = LV_GRAD_DIR_HOR;
-    _grad.bg_grad.stops_count = colors.size();
+    _grad.bg_grad.stops_count = colors.size() > LV_GRADIENT_MAX_STOPS ? LV_GRADIENT_MAX_STOPS : colors.size();
 
-    for (size_t i = 0; i < colors.size(); ++i) {
+    for (size_t i = 0; i < LV_GRADIENT_MAX_STOPS; ++i) {
         _grad.bg_grad.stops[i].color = colors[i];
-        _grad.bg_grad.stops[i].frac = (i == 0) ? 0 : (i == colors.size() - 1 ? 255 : 125);
+        _grad.bg_grad.stops[i].frac = (i == 0) ? 0 : (i == _grad.bg_grad.stops_count - 1 ? 255 : 125);
     }
 
     _grad.border_width = 0;
@@ -93,6 +102,11 @@ void CircularIndicator::setColors(const std::vector<lv_color_t>& colors) {
  * @param width Width of the arc.
  */
 void CircularIndicator::setWidth(int width){
+    if ( width < 0 ){
+        Log::warn("CircularIndicator -- width (%d) must be positive", width);
+        return;
+    }
+
     _width = width;
 }
 
@@ -119,6 +133,11 @@ void CircularIndicator::setAngle(int start, int end){
  * @param start End angle of the arc.
  */
 void CircularIndicator::setValue(float value){
+    if ( value < _min || value > _max ) {
+        Log::warn("CircularIndicator -- value (%.2f) is out of range [%.2f, %.2f]", value, _min, _max);
+        return;
+    }
+
     float normalizedValue = (value - _min) / (_max - _min);
     float angle = normalizedValue * (_endAngle - _startAngle);
     _indicatorAngle = angle + _startAngle;

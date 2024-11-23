@@ -34,7 +34,7 @@ inline void debug(const std::string& msg, ...) {
     va_list args;
     va_start(args, msg);
     Core::Logger::log(LogLevel::Debug, msg, args);
-    va_start(args, msg);
+    va_end(args);
 }
 
 
@@ -46,7 +46,7 @@ inline void info(const std::string& msg, ...) {
     va_list args;
     va_start(args, msg);
     Core::Logger::log(LogLevel::Info, msg, args);
-    va_start(args, msg);
+    va_end(args);
 }
 
 
@@ -58,7 +58,7 @@ inline void warn(const std::string& msg, ...) {
     va_list args;
     va_start(args, msg);
     Core::Logger::log(LogLevel::Warning, msg, args);
-    va_start(args, msg);
+    va_end(args);
 }
 
 
@@ -70,7 +70,7 @@ inline void error(const std::string& msg, ...) {
     va_list args;
     va_start(args, msg);
     Core::Logger::log(LogLevel::Error, msg, args);
-    va_start(args, msg);
+    va_end(args);
 }
 
 
@@ -82,7 +82,7 @@ inline void critical(const std::string& msg, ...) {
     va_list args;
     va_start(args, msg);
     Core::Logger::log(LogLevel::Error, msg, args);
-    va_start(args, msg);
+    va_end(args);
 }
 
 } // Log
