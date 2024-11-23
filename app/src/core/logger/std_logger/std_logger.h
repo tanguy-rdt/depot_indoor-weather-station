@@ -14,7 +14,7 @@
 class StdLogger: public ItfLogger {
 
 public:
-    StdLogger(LogLevel level = LogLevel::INFO);
+    StdLogger(LogLevel level = LogLevel::Info);
     ~StdLogger();
 
     void setLevel(LogLevel level);

@@ -19,12 +19,12 @@ class ItfLogger {
         * @brief Represents the severity levels for log messages.
         */
         enum class Level {
-            DEBUG,
-            INFO,
-            WARNING,
-            ERROR,
-            CRITICAL,
-            NONE
+            Debug,
+            Info,
+            Warning,
+            Error,
+            Critical,
+            None
         };
 
 

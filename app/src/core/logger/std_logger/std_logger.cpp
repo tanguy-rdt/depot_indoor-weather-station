@@ -22,7 +22,7 @@
 #define BOLD_ITALIC   "\033[1;3m"
 
 
-StdLogger::StdLogger(LogLevel level) 
+StdLogger::StdLogger(LogLevel level)
     : _level(level) {
 }
 
@@ -38,39 +38,39 @@ void StdLogger::log(LogLevel level, const std::string& message) {
      if (level >= _level) {
         std::cout << levelToColor(level) << levelToStyle(level)
                   << "[" << getTimestamp() << "] -- " << levelToString(level) << " : " << message 
-                  << levelToStyle(level) << levelToColor(LogLevel::NONE) << std::endl;
+                  << DEFAULT_STYLE << DEFAULT_COLOR << std::endl;
     }
 }
 
 std::string StdLogger::levelToString(LogLevel level) const {
     switch (level) {
-        case LogLevel::DEBUG:    return "DEBUG";
-        case LogLevel::INFO:     return "INFO";
-        case LogLevel::WARNING:  return "WARNING";
-        case LogLevel::ERROR:    return "ERROR";
-        case LogLevel::CRITICAL: return "CRITICAL";
+        case LogLevel::Debug:    return "DEBUG";
+        case LogLevel::Info:     return "INFO";
+        case LogLevel::Warning:  return "WARNING";
+        case LogLevel::Error:    return "ERROR";
+        case LogLevel::Critical: return "CRITICAL";
         default:                 return "UNKNOWN";
     }
 }
 
 std::string StdLogger::levelToColor(LogLevel level) const {
     switch (level) {
-        case LogLevel::DEBUG:    return CYAN;
-        case LogLevel::INFO:     return GREY;
-        case LogLevel::WARNING:  return ORANGE;
-        case LogLevel::ERROR:    return RED;
-        case LogLevel::CRITICAL: return RED_HIGHLIGHT;
+        case LogLevel::Debug:    return CYAN;
+        case LogLevel::Info:     return GREY;
+        case LogLevel::Warning:  return ORANGE;
+        case LogLevel::Error:    return RED;
+        case LogLevel::Critical: return RED_HIGHLIGHT;
         default:                 return DEFAULT_COLOR;
     }
 }
 
 std::string StdLogger::levelToStyle(LogLevel level) const {
     switch (level) {
-        case LogLevel::DEBUG:    return DEFAULT_STYLE;
-        case LogLevel::INFO:     return ITALIC;
-        case LogLevel::WARNING:  return DEFAULT_STYLE;
-        case LogLevel::ERROR:    return BOLD;
-        case LogLevel::CRITICAL: return BOLD_ITALIC;
+        case LogLevel::Debug:    return DEFAULT_STYLE;
+        case LogLevel::Info:     return ITALIC;
+        case LogLevel::Warning:  return DEFAULT_STYLE;
+        case LogLevel::Error:    return BOLD;
+        case LogLevel::Critical: return BOLD_ITALIC;
         default:                 return DEFAULT_STYLE;
     }
 }

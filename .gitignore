@@ -3,6 +3,9 @@
 
 ### Custom ###
 build*
+.idea/.name
+.idea/material_theme_project_new.xml
+.idea/misc.xml
 
 ### C++ ###
 # Prerequisites

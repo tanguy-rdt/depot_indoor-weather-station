@@ -29,7 +29,7 @@ inline void level(LogLevel level) {
  * @param msg The message to log.
  */
 inline void debug(const std::string& msg) {
-    Core::Logger::log(LogLevel::DEBUG, msg);
+    Core::Logger::log(LogLevel::Debug, msg);
 }
 
 
@@ -38,7 +38,7 @@ inline void debug(const std::string& msg) {
  * @param msg The message to log.
  */
 inline void info(const std::string& msg) {
-    Core::Logger::log(LogLevel::INFO, msg);
+    Core::Logger::log(LogLevel::Info, msg);
 }
 
 
@@ -47,7 +47,7 @@ inline void info(const std::string& msg) {
  * @param msg The message to log.
  */
 inline void warn(const std::string& msg) {
-    Core::Logger::log(LogLevel::WARNING, msg);
+    Core::Logger::log(LogLevel::Warning, msg);
 }
 
 
@@ -56,7 +56,7 @@ inline void warn(const std::string& msg) {
  * @param msg The message to log.
  */
 inline void error(const std::string& msg) {
-    Core::Logger::log(LogLevel::ERROR, msg);
+    Core::Logger::log(LogLevel::Error, msg);
 }
 
 
@@ -65,7 +65,7 @@ inline void error(const std::string& msg) {
  * @param msg The message to log.
  */
 inline void critical(const std::string& msg) {
-    Core::Logger::log(LogLevel::CRITICAL, msg);
+    Core::Logger::log(LogLevel::Error, msg);
 }
 
 } // Log

@@ -17,7 +17,7 @@ LOG_MODULE_REGISTER(main);
 int main() {    
    lv_init();
 
-   Log::level(LogLevel::DEBUG);
+   Log::level(LogLevel::Debug);
    Log::info("Hello info");
 
    Hal hal;
