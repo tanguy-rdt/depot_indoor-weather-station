@@ -13,15 +13,16 @@ namespace Widgets {
  * @param r Radius (distance from the origin).
  * @param theta Angle in deg.
  * @param radius Radius of the circular indicator.
+ * @param parent Parent of the circular indicator.
  */
-CircularIndicator::CircularIndicator(int r, int theta, int radius)
-    : _radius(radius) {
+CircularIndicator::CircularIndicator(int r, int theta, int radius, lv_obj_t* parent)
+    : _radius(radius), _parent(parent) {
 
     _gradBuffer = new lv_color_t[LV_CANVAS_BUF_SIZE_TRUE_COLOR(_radius*2, _radius*2)];
     _arcBuffer  = new lv_color_t[LV_CANVAS_BUF_SIZE_TRUE_COLOR(_radius*2, _radius*2)];
 
     _gradCanvas = lv_canvas_create(NULL);
-    _arcCanvas  = lv_canvas_create(lv_scr_act());
+    _arcCanvas  = lv_canvas_create(_parent);
 
     lv_canvas_set_buffer(_gradCanvas, _gradBuffer, _radius*2, _radius*2, LV_IMG_CF_TRUE_COLOR_ALPHA);
     lv_canvas_set_buffer(_arcCanvas,  _arcBuffer,  _radius*2, _radius*2, LV_IMG_CF_TRUE_COLOR_ALPHA);
@@ -85,11 +86,13 @@ void CircularIndicator::setColors(const std::vector<lv_color_t>& colors) {
 
     _grad.bg_opa = LV_OPA_COVER;
     _grad.bg_grad.dir = LV_GRAD_DIR_HOR;
-    _grad.bg_grad.stops_count = colors.size() > LV_GRADIENT_MAX_STOPS ? LV_GRADIENT_MAX_STOPS : colors.size();
+    _grad.bg_grad.stops_count = colors.size() > LV_GRADIENT_MAX_STOPS ?
+        LV_GRADIENT_MAX_STOPS : colors.size();
 
     for (size_t i = 0; i < LV_GRADIENT_MAX_STOPS; ++i) {
         _grad.bg_grad.stops[i].color = colors[i];
-        _grad.bg_grad.stops[i].frac = (i == 0) ? 0 : (i == _grad.bg_grad.stops_count - 1 ? 255 : 125);
+        _grad.bg_grad.stops[i].frac = (i == 0) ? 0 : (i == _grad.bg_grad.stops_count - 1)
+                                               ? 255 : (255 / (_grad.bg_grad.stops_count - 1)) * i;
     }
 
     _grad.border_width = 0;

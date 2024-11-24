@@ -19,7 +19,7 @@ namespace Widgets {
 class CircularIndicator {
 
 public:
-    CircularIndicator(int posX, int posY, int radius);
+    CircularIndicator(int posX, int posY, int radius, lv_obj_t* parent);
     ~CircularIndicator();
 
     void setRange(float min, float max);
@@ -50,6 +50,7 @@ private:
     lv_color_t* _gradBuffer;
     lv_color_t* _arcBuffer;
 
+    lv_obj_t* _parent;
     lv_obj_t* _gradCanvas;
     lv_obj_t* _arcCanvas;
 

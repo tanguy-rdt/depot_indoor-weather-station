@@ -1,27 +1,22 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include "screens.h"
-#include "circular_indicator.h"
+#include "screens/data_screen/data_screen.h"
 
-
-namespace Widgets {
-    class CircularIndicator;
-}
+namespace gui {
 
 class Gui {
 
-public:
-    Gui();
-    ~Gui();
+    public:
+        Gui();
+        ~Gui();
 
-    void init();
+        void init();
 
-private:
-    Screens _screens;
-    Widgets::CircularIndicator* ci;
-
+    private:
+        DataScreen* _dataScreen;
 };
 
+} // gui
 
 #endif // GUI_H

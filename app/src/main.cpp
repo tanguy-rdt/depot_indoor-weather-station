@@ -14,6 +14,8 @@ LOG_MODULE_REGISTER(main);
 #include "lvgl.h"
 #include <unistd.h>
 
+using namespace gui;
+
 int main() {    
    lv_init();
 

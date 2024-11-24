@@ -10,7 +10,6 @@
 
 static lv_disp_draw_buf_t DISP_BUF1;
 
-static lv_style_t _styleBackground;
 static lv_style_t _styleBacklight;
 
 
@@ -75,9 +74,7 @@ void Display::createDisplay() {
 }
 
 void Display::initDummyCircleDisplay() {
-    lv_style_init(&_styleBackground);
-    lv_style_set_bg_img_src(&_styleBackground, &simu_bg_black);
-    lv_obj_add_style(lv_scr_act(), &_styleBackground, 0);
+    lv_disp_set_bg_image(_disp, &simu_bg_black);
 }
 
 void Display::initDummyBacklight() {

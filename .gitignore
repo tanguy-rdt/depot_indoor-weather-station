@@ -6,6 +6,7 @@ build*
 .idea/.name
 .idea/material_theme_project_new.xml
 .idea/misc.xml
+.idea/git_toolbox_blame.xml
 
 ### C++ ###
 # Prerequisites

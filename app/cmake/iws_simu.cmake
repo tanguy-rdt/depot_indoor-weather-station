@@ -46,7 +46,11 @@ set(SRC
     ${SRC_DIR}/hal/hal_stub/display/background/simu_bg_black.c
     ${SRC_DIR}/hal/hal_stub/display/background/simu_bg_white.c
     ${SRC_DIR}/gui/gui.cpp
-    ${SRC_DIR}/gui/screens/screens.cpp
+    ${SRC_DIR}/gui/fonts/roboto_30.c
+    ${SRC_DIR}/gui/fonts/roboto_50.c
+    ${SRC_DIR}/gui/fonts/roboto_60.c
+    ${SRC_DIR}/gui/fonts/roboto_70.c
+    ${SRC_DIR}/gui/screens/data_screen/data_screen.cpp
     ${SRC_DIR}/gui/widgets/circular_indicator/circular_indicator.cpp
 )
 
@@ -61,7 +65,7 @@ set(INCLUDE_DIRS
     ${SRC_DIR}/hal/hal_stub/display/background
     ${SRC_DIR}/gui
     ${SRC_DIR}/gui/common
-    ${SRC_DIR}/gui/screens
+    ${SRC_DIR}/gui/screens/data_screen
     ${SRC_DIR}/gui/widgets
     ${SRC_DIR}/gui/widgets/circular_indicator
 )
