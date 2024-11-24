@@ -47,6 +47,7 @@ set(SRC
     ${SRC_DIR}/hal/hal_stub/display/background/simu_bg_white.c
     ${SRC_DIR}/proxy/proxy.cpp
     ${SRC_DIR}/proxy/model/model.cpp
+    ${SRC_DIR}/proxy/data_refresher/data_refresher.cpp
     ${SRC_DIR}/gui/gui.cpp
     ${SRC_DIR}/gui/fonts/roboto_30.c
     ${SRC_DIR}/gui/fonts/roboto_50.c
@@ -67,6 +68,7 @@ set(INCLUDE_DIRS
     ${SRC_DIR}/hal/hal_stub/display/background
     ${SRC_DIR}/proxy
     ${SRC_DIR}/proxy/model
+    ${SRC_DIR}/proxy/data_refresher
     ${SRC_DIR}/gui
     ${SRC_DIR}/gui/common
     ${SRC_DIR}/gui/screens/data_screen

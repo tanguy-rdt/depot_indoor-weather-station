@@ -8,8 +8,10 @@
 #ifndef PROXY_H
 #define PROXY_H
 
-#include "model/model.h"
+#include <mutex>
 
+#include "model/model.h"
+#include "data_refresher/data_refresher.h"
 
 namespace proxy {
 
@@ -31,6 +33,11 @@ class Proxy {
         void  setAirQuality(float airQuality);
 
     private:
+        void startAutomatedDataRefresh();
+
+        mutable std::mutex _mutex;
+
+        DataRefresher _dataRefresher;
         Model _model;
 };
 

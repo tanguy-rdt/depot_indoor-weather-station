@@ -1,6 +1,7 @@
 #include "gui.h"
 
 #include "lvgl.h"
+#include "data_type.h"
 
 namespace gui {
 
@@ -16,7 +17,7 @@ Gui::~Gui() {
 
 void Gui::init() {
     lv_scr_load(_dataScreen->getScreen());
-    _dataScreen->showData(DataScreen::Types::AIR_QUALITY);
+    _dataScreen->showData(DataType::AIR_QUALITY);
 }
 
 } // gui

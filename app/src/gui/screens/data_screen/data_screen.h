@@ -6,6 +6,7 @@
 
 #include "circular_indicator.h"
 #include "proxy/proxy.h"
+#include "data_type.h"
 
 using namespace proxy;
 
@@ -18,15 +19,8 @@ class DataScreen {
 
         using Screen = lv_obj_t;
 
-        enum class Types {
-            TEMPERATURE,
-            HUMIDITY,
-            PRESSURE,
-            AIR_QUALITY,
-        };
-
         Screen* getScreen() const;
-        void showData(Types dataTypes);
+        void showData(DataType dataTypes);
 
     private:
         Proxy* _proxy;
@@ -44,7 +38,7 @@ class DataScreen {
             std::vector<lv_color_t> colors;
         };
 
-        std::map<Types, Data> _data;
+        std::map<DataType, Data> _data;
 };
 
 } // gui

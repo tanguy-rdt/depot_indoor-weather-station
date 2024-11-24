@@ -19,7 +19,7 @@ DataScreen::DataScreen(Proxy* proxy)
     _circularIndicator->setAngle(60, 300);
     _circularIndicator->setWidth(15);
 
-    _data[Types::TEMPERATURE] = {
+    _data[DataType::TEMPERATURE] = {
         .units = "°C",
         .range = std::make_pair(10.0, 35.0),
         .colors = {
@@ -30,7 +30,7 @@ DataScreen::DataScreen(Proxy* proxy)
         }
     };
 
-    _data[Types::HUMIDITY] = {
+    _data[DataType::HUMIDITY] = {
         .units = "%",
         .range = std::make_pair(0.0, 100.0),
         .colors = {
@@ -40,7 +40,7 @@ DataScreen::DataScreen(Proxy* proxy)
         }
     };
 
-    _data[Types::PRESSURE] = {
+    _data[DataType::PRESSURE] = {
         .units = "Pa",
         .range = std::make_pair(950.0, 1050.0),
         .colors = {
@@ -50,7 +50,7 @@ DataScreen::DataScreen(Proxy* proxy)
         }
     };
 
-    _data[Types::AIR_QUALITY] = {
+    _data[DataType::AIR_QUALITY] = {
         .units = "",
         .range = std::make_pair(0.0, 500.0),
         .colors = {
@@ -92,16 +92,16 @@ DataScreen::Screen *DataScreen::getScreen() const {
     return _screen;
 }
 
-void DataScreen::showData(Types dataTypes) {
-    Log::debug("DataScreen::showData -- %d", dataTypes);
+void DataScreen::showData(DataType dataType) {
+    Log::debug("DataScreen::showData -- %s", tools::dataTypeToString(dataType).c_str());
 
-    auto value = dataTypes == Types::TEMPERATURE ? _proxy->getTemperature() :
-                        dataTypes == Types::HUMIDITY    ? _proxy->getHumidity()    :
-                        dataTypes == Types::PRESSURE    ? _proxy->getPressure()    :
-                        dataTypes == Types::AIR_QUALITY ? _proxy->getAirQuality()  : 0.0;
+    auto value = dataType == DataType::TEMPERATURE ? _proxy->getTemperature() :
+                        dataType == DataType::HUMIDITY    ? _proxy->getHumidity()    :
+                        dataType == DataType::PRESSURE    ? _proxy->getPressure()    :
+                        dataType == DataType::AIR_QUALITY ? _proxy->getAirQuality()  : 0.0;
 
-    _circularIndicator->setRange(_data[dataTypes].range.first, _data[dataTypes].range.second);
-    _circularIndicator->setColors(_data[dataTypes].colors);
+    _circularIndicator->setRange(_data[dataType].range.first, _data[dataType].range.second);
+    _circularIndicator->setColors(_data[dataType].colors);
     auto modStatus = _circularIndicator->setValue(value);
     _circularIndicator->draw();
 
@@ -110,7 +110,7 @@ void DataScreen::showData(Types dataTypes) {
     lv_label_set_text(_labelValue, guiValue.c_str());
     lv_obj_set_parent(_labelValue, _labelContainer);
 
-    lv_label_set_text(_labelUnits, _data[dataTypes].units.c_str());
+    lv_label_set_text(_labelUnits, _data[dataType].units.c_str());
     lv_obj_set_parent(_labelUnits, _labelContainer);
 }
 
