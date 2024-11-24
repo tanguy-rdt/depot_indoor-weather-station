@@ -10,7 +10,7 @@
 
 #include "lvgl.h"
 
-namespace Tools {
+namespace tools {
     class CoordConverter;
 }
 
@@ -26,7 +26,7 @@ public:
     void setColors(const std::vector<lv_color_t>& colors);
     void setWidth(int width);
     void setAngle(int start, int end);
-    void setValue(float value);
+    bool setValue(float value);
     void draw();
 
 private:

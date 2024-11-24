@@ -9,11 +9,13 @@ LOG_MODULE_REGISTER(main);
 #include "log.h"
 
 #include "hal.h"
+#include "proxy/proxy.h"
 #include "gui.h"
 
 #include "lvgl.h"
 #include <unistd.h>
 
+using namespace proxy;
 using namespace gui;
 
 int main() {    
@@ -28,7 +30,9 @@ int main() {
    Hal hal;
    hal.init();
 
-   Gui gui;
+   Proxy proxy;
+
+   Gui gui(&proxy);
    gui.init();
 
    while (true) {

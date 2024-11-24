@@ -33,8 +33,8 @@ CircularIndicator::CircularIndicator(int r, int theta, int radius, lv_obj_t* par
     lv_draw_arc_dsc_init(&_arc);
     lv_draw_arc_dsc_init(&_indicator);
 
-    Tools::CoordConverter::polarToCartesian(r, theta, &_posX, &_posY);
-    Tools::CoordConverter::getXYtopLeftFromCentered(&_posX, &_posY, _radius*2, _radius*2);
+    tools::CoordConverter::polarToCartesian(r, theta, &_posX, &_posY);
+    tools::CoordConverter::getXYtopLeftFromCentered(&_posX, &_posY, _radius*2, _radius*2);
 
     setRange(0.0, 100.0);
     setWidth(10);
@@ -134,11 +134,12 @@ void CircularIndicator::setAngle(int start, int end){
  * Changing the width of the arc. 
  * @param start Start angle of the arc.
  * @param start End angle of the arc.
+ * @return status Modification status
  */
-void CircularIndicator::setValue(float value){
+bool CircularIndicator::setValue(float value){
     if ( value < _min || value > _max ) {
         Log::warn("CircularIndicator -- value (%.2f) is out of range [%.2f, %.2f]", value, _min, _max);
-        return;
+        return false;
     }
 
     float normalizedValue = (value - _min) / (_max - _min);
@@ -146,6 +147,8 @@ void CircularIndicator::setValue(float value){
     _indicatorAngle = angle + _startAngle;
 
     _indicatorAngleIsValidToDraw = false;
+
+    return true;
 }
 
 

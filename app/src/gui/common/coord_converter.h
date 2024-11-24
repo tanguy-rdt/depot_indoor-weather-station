@@ -10,7 +10,7 @@
 #include "lvgl.h"
 #include "gui_conf_internal.h"
 
-namespace Tools {
+namespace tools {
 
 class CoordConverter {
 public:
@@ -45,6 +45,6 @@ public:
     }
 };
 
-} // Tools
+} // tools
 
 #endif // COORD_CONVERTER_H

@@ -4,8 +4,10 @@
 
 namespace gui {
 
-Gui::Gui() {
-    _dataScreen = new DataScreen();
+Gui::Gui(Proxy* proxy)
+    : _proxy(proxy) {
+
+    _dataScreen = new DataScreen(_proxy);
 }
 
 Gui::~Gui() {
@@ -14,7 +16,7 @@ Gui::~Gui() {
 
 void Gui::init() {
     lv_scr_load(_dataScreen->getScreen());
-    _dataScreen->showData(DataScreen::Types::TEMPERATURE);
+    _dataScreen->showData(DataScreen::Types::AIR_QUALITY);
 }
 
 } // gui

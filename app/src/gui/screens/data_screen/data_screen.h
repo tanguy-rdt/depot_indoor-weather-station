@@ -5,13 +5,15 @@
 #include "lvgl.h"
 
 #include "circular_indicator.h"
+#include "proxy/proxy.h"
 
+using namespace proxy;
 
 namespace gui {
 
 class DataScreen {
     public:
-        DataScreen();
+        DataScreen(Proxy* proxy);
         ~DataScreen();
 
         using Screen = lv_obj_t;
@@ -20,13 +22,15 @@ class DataScreen {
             TEMPERATURE,
             HUMIDITY,
             PRESSURE,
-            QUALITY_OF_AIR,
+            AIR_QUALITY,
         };
 
         Screen* getScreen() const;
         void showData(Types dataTypes);
 
     private:
+        Proxy* _proxy;
+
         Widgets::CircularIndicator* _circularIndicator;
 
         Screen* _screen;

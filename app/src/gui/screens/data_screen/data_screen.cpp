@@ -1,12 +1,16 @@
 #include "data_screen.h"
 
-#include "gui_conf_internal.h"
 #include "lvgl.h"
+
+#include "proxy_value_to_gui.h"
+#include "gui_conf_internal.h"
 #include "log.h"
 
 namespace gui {
 
-DataScreen::DataScreen() {
+DataScreen::DataScreen(Proxy* proxy)
+    : _proxy(proxy){
+
     Log::debug("DataScreen -- created");
 
     _screen = lv_obj_create(NULL);
@@ -46,7 +50,7 @@ DataScreen::DataScreen() {
         }
     };
 
-    _data[Types::QUALITY_OF_AIR] = {
+    _data[Types::AIR_QUALITY] = {
         .units = "",
         .range = std::make_pair(0.0, 500.0),
         .colors = {
@@ -91,12 +95,19 @@ DataScreen::Screen *DataScreen::getScreen() const {
 void DataScreen::showData(Types dataTypes) {
     Log::debug("DataScreen::showData -- %d", dataTypes);
 
+    auto value = dataTypes == Types::TEMPERATURE ? _proxy->getTemperature() :
+                        dataTypes == Types::HUMIDITY    ? _proxy->getHumidity()    :
+                        dataTypes == Types::PRESSURE    ? _proxy->getPressure()    :
+                        dataTypes == Types::AIR_QUALITY ? _proxy->getAirQuality()  : 0.0;
+
     _circularIndicator->setRange(_data[dataTypes].range.first, _data[dataTypes].range.second);
     _circularIndicator->setColors(_data[dataTypes].colors);
-    _circularIndicator->setValue(31.1);
+    auto modStatus = _circularIndicator->setValue(value);
     _circularIndicator->draw();
 
-    lv_label_set_text(_labelValue, "99.9");
+
+    auto guiValue = modStatus ? tools::convertToGUI(value) : std::string("--.-");
+    lv_label_set_text(_labelValue, guiValue.c_str());
     lv_obj_set_parent(_labelValue, _labelContainer);
 
     lv_label_set_text(_labelUnits, _data[dataTypes].units.c_str());
