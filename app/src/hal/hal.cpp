@@ -20,3 +20,7 @@ Hal::~Hal() {
 void Hal::init() {
     _hal->init();
 }
+
+ItfSensor* Hal::getSensor(Sensors sensor) const {
+    return _hal->getSensor(sensor);
+}

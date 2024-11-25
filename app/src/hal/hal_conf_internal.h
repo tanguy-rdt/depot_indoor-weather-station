@@ -21,3 +21,10 @@
 #else
     #error "hal_conf.h: CONF_HAL_SCREEN_HEIGHT is missing"
 #endif
+
+
+#ifdef CONF_HAL_SENSOR_BME680
+    #define HAL_SENSOR_BME680 CONF_HAL_SENSOR_BME680
+#else
+    #error "hal_conf.h: CONF_HAL_SENSOR_BME680 is missing"
+#endif

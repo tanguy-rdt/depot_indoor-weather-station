@@ -36,6 +36,15 @@ void HalStub::init() {
     pthread_create(&THR_TICK, NULL, tick_thread, NULL);
 }
 
+ItfSensor* HalStub::getSensor(Sensors sensor) {
+    if (sensors::isSensorAvailable(sensor)) {
+        return sensor == Sensors::BME680 ? &_bme680 :
+                                           nullptr;
+    }
+
+    return nullptr;
+}
+
 void HalStub::setDisplayBrightness(int percent) {
     _display->setBacklightLevel(percent);
 }

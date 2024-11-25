@@ -45,6 +45,7 @@ set(SRC
     ${SRC_DIR}/hal/hal_stub/display/display.cpp
     ${SRC_DIR}/hal/hal_stub/display/background/simu_bg_black.c
     ${SRC_DIR}/hal/hal_stub/display/background/simu_bg_white.c
+    ${SRC_DIR}/hal/hal_stub/sensors/bme680/bme_680.cpp
     ${SRC_DIR}/proxy/proxy.cpp
     ${SRC_DIR}/proxy/model/model.cpp
     ${SRC_DIR}/proxy/data_refresher/data_refresher.cpp
@@ -63,9 +64,11 @@ set(INCLUDE_DIRS
     ${SRC_DIR}/core/logger
     ${SRC_DIR}/core/logger/std_logger
     ${SRC_DIR}/hal
+    ${SRC_DIR}/hal/common
     ${SRC_DIR}/hal/hal_stub
     ${SRC_DIR}/hal/hal_stub/display
     ${SRC_DIR}/hal/hal_stub/display/background
+    ${SRC_DIR}/hal/hal_stub/sensors/bme680/
     ${SRC_DIR}/proxy
     ${SRC_DIR}/proxy/model
     ${SRC_DIR}/proxy/data_refresher

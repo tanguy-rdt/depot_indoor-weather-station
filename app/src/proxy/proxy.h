@@ -10,6 +10,7 @@
 
 #include <mutex>
 
+#include "hal/hal.h"
 #include "model/model.h"
 #include "data_refresher/data_refresher.h"
 
@@ -17,26 +18,20 @@ namespace proxy {
 
 class Proxy {
     public:
-        Proxy();
+        Proxy(Hal* hal);
         ~Proxy();
 
-        float getTemperature() const;
-        void  setTemperature(float temp);
-
-        float getHumidity() const;
-        void  setHumidity(float hum);
-
-        float getPressure() const;
-        void  setPressure(float press);
-
-        float getAirQuality() const;
-        void  setAirQuality(float airQuality);
+        float getTemperature();
+        float getHumidity();
+        float getPressure();
+        float getAirQuality();
 
     private:
         void startAutomatedDataRefresh();
 
         mutable std::mutex _mutex;
 
+        Hal* _hal;
         DataRefresher _dataRefresher;
         Model _model;
 };

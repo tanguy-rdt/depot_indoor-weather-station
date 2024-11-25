@@ -6,6 +6,11 @@
 #include "itf_hal.h"
 #include "display.h"
 
+#include "common/itf_sensor.h"
+#include "common/sensor_availability.h"
+
+#include "sensors/bme680/bme_680.h"
+
 
 class HalStub: public ItfHal {
 
@@ -15,10 +20,11 @@ public:
 
     void init();
     void setDisplayBrightness(int percent);
+    ItfSensor* getSensor(Sensors sensor) override;
 
 private:
     std::unique_ptr<Display> _display;
-
+    sensors::BME680 _bme680;
 };
 
 

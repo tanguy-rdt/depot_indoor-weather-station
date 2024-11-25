@@ -30,7 +30,7 @@ int main() {
    Hal hal;
    hal.init();
 
-   Proxy proxy;
+   Proxy proxy(&hal);
 
    Gui gui(&proxy);
    gui.init();

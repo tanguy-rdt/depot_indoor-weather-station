@@ -17,7 +17,7 @@ Gui::~Gui() {
 
 void Gui::init() {
     lv_scr_load(_dataScreen->getScreen());
-    _dataScreen->showData(DataType::AIR_QUALITY);
+    _dataScreen->showData(DataType::TEMPERATURE);
 }
 
 } // gui
