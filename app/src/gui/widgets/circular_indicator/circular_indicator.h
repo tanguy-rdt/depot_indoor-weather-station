@@ -26,33 +26,33 @@ public:
     void setColors(const std::vector<lv_color_t>& colors);
     void setWidth(int width);
     void setAngle(int start, int end);
-    bool setValue(float value);
-    void draw();
+    void setValue(float value);
 
 private:
-    void applyOffsetOnAngle(bool* valid, int* angle);
-
     int _radius;
     int _posX;
     int _posY;
     int _width;
 
+    int  _rawStartAngle;
+    int  _rawEndAngle;
+    int  _rawIndicatorAngle;
+
     int  _startAngle;
-    bool _startAngleIsValidToDraw;
     int  _endAngle;
-    bool _endAngleIsValidToDraw;
     int  _indicatorAngle;
-    bool _indicatorAngleIsValidToDraw;
 
     float _min;
     float _max;
 
     lv_color_t* _gradBuffer;
     lv_color_t* _arcBuffer;
+    lv_color_t* _indicatorBuffer;
 
     lv_obj_t* _parent;
     lv_obj_t* _gradCanvas;
     lv_obj_t* _arcCanvas;
+    lv_obj_t* _indicatorCanvas;
 
     lv_draw_rect_dsc_t _grad;
     lv_draw_arc_dsc_t _arc;

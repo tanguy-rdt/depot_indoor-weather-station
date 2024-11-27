@@ -20,12 +20,15 @@ CircularIndicator::CircularIndicator(int r, int theta, int radius, lv_obj_t* par
 
     _gradBuffer = new lv_color_t[LV_CANVAS_BUF_SIZE_TRUE_COLOR(_radius*2, _radius*2)];
     _arcBuffer  = new lv_color_t[LV_CANVAS_BUF_SIZE_TRUE_COLOR(_radius*2, _radius*2)];
+    _indicatorBuffer  = new lv_color_t[LV_CANVAS_BUF_SIZE_TRUE_COLOR(_radius*2, _radius*2)];
 
     _gradCanvas = lv_canvas_create(NULL);
     _arcCanvas  = lv_canvas_create(_parent);
+    _indicatorCanvas  = lv_canvas_create(_parent);
 
     lv_canvas_set_buffer(_gradCanvas, _gradBuffer, _radius*2, _radius*2, LV_IMG_CF_TRUE_COLOR_ALPHA);
     lv_canvas_set_buffer(_arcCanvas,  _arcBuffer,  _radius*2, _radius*2, LV_IMG_CF_TRUE_COLOR_ALPHA);
+    lv_canvas_set_buffer(_indicatorCanvas,  _indicatorBuffer,  _radius*2, _radius*2, LV_IMG_CF_TRUE_COLOR_ALPHA);
 
     _imgGrad = nullptr;
 
@@ -36,7 +39,12 @@ CircularIndicator::CircularIndicator(int r, int theta, int radius, lv_obj_t* par
     tools::CoordConverter::polarToCartesian(r, theta, &_posX, &_posY);
     tools::CoordConverter::getXYtopLeftFromCentered(&_posX, &_posY, _radius*2, _radius*2);
 
+    lv_obj_set_pos(_gradCanvas, _posX, _posY);
+    lv_obj_set_pos(_arcCanvas,  _posX, _posY);
+    lv_obj_set_pos(_indicatorCanvas,  _posX, _posY);
+
     setRange(0.0, 100.0);
+    setColors({lv_color_white(), lv_color_black()});
     setWidth(10);
     setAngle(45, 315);
     setValue(0.0);
@@ -49,12 +57,12 @@ CircularIndicator::CircularIndicator(int r, int theta, int radius, lv_obj_t* par
 CircularIndicator::~CircularIndicator() {
     lv_obj_del(_gradCanvas);
     lv_obj_del(_arcCanvas);
+    lv_obj_del(_indicatorCanvas);
 
     delete[] _gradBuffer;
     delete[] _arcBuffer;
+    delete[] _indicatorBuffer;
 
-    _gradBuffer = nullptr;
-    _gradCanvas = nullptr;
     _imgGrad    = nullptr;
 }
 
@@ -97,6 +105,16 @@ void CircularIndicator::setColors(const std::vector<lv_color_t>& colors) {
 
     _grad.border_width = 0;
     _grad.shadow_width = 0;
+
+    lv_canvas_draw_rect(_gradCanvas, 0, 0, _radius*2, _radius*2, &_grad);
+    _imgGrad = lv_canvas_get_img(_gradCanvas);
+
+    lv_canvas_fill_bg(_arcCanvas,  lv_color_white(), LV_OPA_TRANSP);
+    _arc.img_src = _imgGrad;
+    _arc.width   = _width;
+    _arc.rounded = 1;
+
+    lv_canvas_draw_arc(_arcCanvas, _radius, _radius, _radius, _startAngle, _endAngle, &_arc);
 }
 
 
@@ -122,11 +140,13 @@ void CircularIndicator::setWidth(int width){
  * @param end End angle of the arc.
  */
 void CircularIndicator::setAngle(int start, int end){
-    _startAngle = start;
-    _endAngle   = end;
+    _rawStartAngle = start;
+    _rawEndAngle   = end;
 
-    _startAngleIsValidToDraw = false;
-    _endAngleIsValidToDraw = false;
+    _startAngle = _rawStartAngle + OFFSET_LVGL_ANGLE;
+    _endAngle = _rawEndAngle + OFFSET_LVGL_ANGLE;
+
+    lv_canvas_draw_arc(_arcCanvas, _radius, _radius, _radius, _startAngle, _endAngle, &_arc);
 }
 
 
@@ -136,59 +156,25 @@ void CircularIndicator::setAngle(int start, int end){
  * @param start End angle of the arc.
  * @return status Modification status
  */
-bool CircularIndicator::setValue(float value){
+void CircularIndicator::setValue(float value){
+    lv_canvas_fill_bg(_indicatorCanvas,  lv_color_white(), LV_OPA_TRANSP);
+
+
     if ( value < _min || value > _max ) {
         Log::warn("CircularIndicator -- value (%.2f) is out of range [%.2f, %.2f]", value, _min, _max);
-        return false;
+        value < _min ? value = _min : value > _max ? value = _max : value;
     }
 
     float normalizedValue = (value - _min) / (_max - _min);
-    float angle = normalizedValue * (_endAngle - _startAngle);
-    _indicatorAngle = angle + _startAngle;
-
-    _indicatorAngleIsValidToDraw = false;
-
-    return true;
-}
-
-
-/**
- * Draw the arc, each time it is modified the 
- * arc must be redrawn by calling this function.
- */
-void CircularIndicator::draw(){
-    lv_canvas_draw_rect(_gradCanvas, 0, 0, _radius*2, _radius*2, &_grad);
-    _imgGrad = lv_canvas_get_img(_gradCanvas);
-
-    _arc.img_src = _imgGrad;
-    _arc.width   = _width;
-    _arc.rounded = 1;
+    float angle = normalizedValue * (_rawEndAngle - _rawStartAngle);
+    _rawIndicatorAngle = angle + _rawStartAngle;
+    _indicatorAngle = _rawIndicatorAngle + OFFSET_LVGL_ANGLE;
 
     _indicator.color   = lv_color_white();
     _indicator.width   = _width;
     _indicator.rounded = 1;
 
-    applyOffsetOnAngle(&_startAngleIsValidToDraw, &_startAngle);
-    applyOffsetOnAngle(&_endAngleIsValidToDraw, &_endAngle);
-    applyOffsetOnAngle(&_indicatorAngleIsValidToDraw, &_indicatorAngle);
-
-    lv_canvas_draw_arc(_arcCanvas, _radius, _radius, _radius, _startAngle, _endAngle, &_arc);
-    lv_canvas_draw_arc(_arcCanvas, _radius, _radius, _radius, _indicatorAngle, _indicatorAngle+1, &_indicator);
-
-    lv_obj_set_pos(_gradCanvas, _posX, _posY);
-    lv_obj_set_pos(_arcCanvas,  _posX, _posY);
-}
-
-
-/**
- * Applies an offset with respect to the angle used by LVGL 
- * to display and the angle used to draw this widget
- */
-void CircularIndicator::applyOffsetOnAngle(bool* valid, int* angle){
-    if (! *valid ) {
-        *angle += OFFSET_LVGL_ANGLE;
-        *valid = true;
-    }
+    lv_canvas_draw_arc(_indicatorCanvas, _radius, _radius, _radius, _indicatorAngle, _indicatorAngle+1, &_indicator);
 }
 
 } // Widgets
