@@ -5,10 +5,10 @@
 
 namespace gui {
 
-Gui::Gui(Proxy* proxy)
-    : _proxy(proxy) {
+Gui::Gui(Proxy* proxy, EventManager* eventManager)
+    : _proxy(proxy), _eventManager(eventManager) {
 
-    _dataScreen = new DataScreen(_proxy);
+    _dataScreen = new DataScreen(_proxy, _eventManager);
 }
 
 Gui::~Gui() {

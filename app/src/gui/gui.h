@@ -11,12 +11,13 @@ namespace gui {
 class Gui {
 
     public:
-        Gui(Proxy* proxy);
+        Gui(Proxy* proxy, EventManager* eventManager);
         ~Gui();
 
         void init();
 
     private:
+        EventManager* _eventManager;
         Proxy* _proxy;
         DataScreen* _dataScreen;
 };

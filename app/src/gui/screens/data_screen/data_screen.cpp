@@ -8,10 +8,8 @@
 
 namespace gui {
 
-DataScreen::DataScreen(Proxy* proxy)
-    : _proxy(proxy){
-
-    Log::debug("DataScreen -- created");
+DataScreen::DataScreen(Proxy* proxy, EventManager* eventManager)
+    : _proxy(proxy), _eventManager(eventManager) {
 
     _screen = lv_obj_create(NULL);
 
@@ -75,6 +73,24 @@ DataScreen::DataScreen(Proxy* proxy)
     _labelUnits = lv_label_create(_labelContainer);
     lv_obj_set_style_text_color(_labelUnits, lv_color_white(), 0);
     lv_obj_set_style_text_font(_labelUnits, &roboto_30, 0);
+
+    _eventManager->connect(EventManager::Signal::TEMPERATURE_UPDATED, [this]() {
+        this->update(DataType::TEMPERATURE);
+    });
+
+    _eventManager->connect(EventManager::Signal::HUMIDITY_UPDATED, [this]() {
+        this->update(DataType::HUMIDITY);
+    });
+
+    _eventManager->connect(EventManager::Signal::PRESSURE_UPDATED, [this]() {
+        this->update(DataType::PRESSURE);
+    });
+
+    _eventManager->connect(EventManager::Signal::AIR_QUALITY_UPDATED, [this]() {
+        this->update(DataType::AIR_QUALITY);
+    });
+
+    _currentDataTypeScreen = DataType::TEMPERATURE;
 }
 
 DataScreen::~DataScreen() {
@@ -96,22 +112,31 @@ void DataScreen::showData(DataType dataType) {
     Log::debug("DataScreen::showData -- %s", tools::dataTypeToString(dataType).c_str());
 
     auto value = dataType == DataType::TEMPERATURE ? _proxy->getTemperature() :
-                        dataType == DataType::HUMIDITY    ? _proxy->getHumidity()    :
-                        dataType == DataType::PRESSURE    ? _proxy->getPressure()    :
-                        dataType == DataType::AIR_QUALITY ? _proxy->getAirQuality()  : 0.0;
+                    dataType == DataType::HUMIDITY    ? _proxy->getHumidity()    :
+                    dataType == DataType::PRESSURE    ? _proxy->getPressure()    :
+                    dataType == DataType::AIR_QUALITY ? _proxy->getAirQuality()  : 0.0;
 
     _circularIndicator->setRange(_data[dataType].range.first, _data[dataType].range.second);
     _circularIndicator->setColors(_data[dataType].colors);
-    auto modStatus = _circularIndicator->setValue(value);
-    _circularIndicator->draw();
+    _circularIndicator->setValue(value);
 
-
-    auto guiValue = modStatus ? tools::convertToGUI(value) : std::string("--.-");
-    lv_label_set_text(_labelValue, guiValue.c_str());
+    lv_label_set_text(_labelValue, tools::convertToGUI(value).c_str());
     lv_obj_set_parent(_labelValue, _labelContainer);
 
     lv_label_set_text(_labelUnits, _data[dataType].units.c_str());
     lv_obj_set_parent(_labelUnits, _labelContainer);
+
+    _currentDataTypeScreen = dataType;
+}
+
+void DataScreen::update(DataType dataType) {
+    auto value = dataType == DataType::TEMPERATURE ? _proxy->getTemperature() :
+                    dataType == DataType::HUMIDITY    ? _proxy->getHumidity()    :
+                    dataType == DataType::PRESSURE    ? _proxy->getPressure()    :
+                    dataType == DataType::AIR_QUALITY ? _proxy->getAirQuality()  : 0.0;
+
+    _circularIndicator->setValue(value);
+    lv_label_set_text(_labelValue, tools::convertToGUI(value).c_str());
 }
 
 } // gui

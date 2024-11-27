@@ -14,7 +14,7 @@ namespace gui {
 
 class DataScreen {
     public:
-        DataScreen(Proxy* proxy);
+        DataScreen(Proxy* proxy, EventManager* eventManager);
         ~DataScreen();
 
         using Screen = lv_obj_t;
@@ -23,6 +23,11 @@ class DataScreen {
         void showData(DataType dataTypes);
 
     private:
+        void update(DataType dataType);
+
+        DataType _currentDataTypeScreen;
+
+        EventManager* _eventManager;
         Proxy* _proxy;
 
         Widgets::CircularIndicator* _circularIndicator;
