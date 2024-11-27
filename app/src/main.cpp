@@ -11,15 +11,18 @@ LOG_MODULE_REGISTER(main);
 #include "hal.h"
 #include "proxy/proxy.h"
 #include "gui.h"
+#include "event_manager/event_manager.h"
+#include <unistd.h>
 
 #include "lvgl.h"
-#include <unistd.h>
 
 using namespace proxy;
 using namespace gui;
 
-int main() {    
+int main() {
    lv_init();
+
+   EventManager eventManager;
 
    #ifdef DEBUG
       Log::level(LogLevel::Debug);
@@ -30,15 +33,15 @@ int main() {
    Hal hal;
    hal.init();
 
-   Proxy proxy(&hal);
+   Proxy proxy(&hal, &eventManager);
 
-   Gui gui(&proxy);
+   Gui gui(&proxy, &eventManager);
    gui.init();
 
    while (true) {
       uint32_t ms_delay = lv_timer_handler();
       usleep(ms_delay * 1000);
    }
-   
+
    return 0;
 }

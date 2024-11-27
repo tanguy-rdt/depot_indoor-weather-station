@@ -24,13 +24,17 @@ else()
 endif()
 
 
-# ADD LV_DRIVERS
+# ADD LV_DRIVERS THIRD-PARTY
 add_subdirectory(${THIRD_PARTY_DIR}/lv_drivers)
 
 set(LV_DRIVERS_HEADERS ${THIRD_PARTY_DIR}/lv_drivers)
 set(LV_DRV_CONF_PATH   ${CONFIG_DIR})
 
 target_include_directories(lv_drivers BEFORE PUBLIC ${LV_DRV_CONF_PATH})
+
+
+# ADD SIGSLOT THIRD-PARTY
+add_subdirectory(${THIRD_PARTY_DIR}/sigslot)
 
 
 # ADD .cpp & .h
@@ -56,6 +60,7 @@ set(SRC
     ${SRC_DIR}/gui/fonts/roboto_70.c
     ${SRC_DIR}/gui/screens/data_screen/data_screen.cpp
     ${SRC_DIR}/gui/widgets/circular_indicator/circular_indicator.cpp
+    ${SRC_DIR}/event_manager/event_manager.cpp
 )
 
 set(INCLUDE_DIRS
@@ -77,13 +82,14 @@ set(INCLUDE_DIRS
     ${SRC_DIR}/gui/screens/data_screen
     ${SRC_DIR}/gui/widgets
     ${SRC_DIR}/gui/widgets/circular_indicator
+    ${SRC_DIR}/event_manager
 )
 
 
 # LINK
 add_executable(iws ${SRC})
 target_include_directories(iws PUBLIC ${LVGL_HEADERS} ${INCLUDE_DIRS})
-target_link_libraries(iws PRIVATE pthread SDL2::SDL2 lv_drivers lvgl)
+target_link_libraries(iws PRIVATE pthread SDL2::SDL2 Pal::Sigslot lv_drivers lvgl)
 
 
 # SIMU

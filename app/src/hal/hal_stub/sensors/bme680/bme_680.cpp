@@ -7,10 +7,12 @@
 
 #include "bme_680.h"
 
+#include <random>
+
 namespace sensors {
 
 float BME680::getTemperature() const {
-    return 31.1;
+    return random() % 20 + 20;
 }
 
 float BME680::getHumidity() const {

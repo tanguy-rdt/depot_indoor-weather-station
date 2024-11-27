@@ -18,22 +18,31 @@ namespace proxy {
 
 class DataRefresher {
     public:
-    DataRefresher();
-    ~DataRefresher();
+        DataRefresher();
+        ~DataRefresher();
 
-    void newEntry(DataType dataType, int interval, std::function<void()> proxyFunction);
-    void start();
-    void stop();
+        using UpdaterCb = std::function<bool()>;
+        using NotifierCb = std::function<void()>;
+
+        void newEntry(DataType dataType, int interval, const UpdaterCb& updater, const NotifierCb& notifier);
+        void start();
+        void stop();
 
     private:
-    void run();
+        void run();
 
-    using ProxyFunction = std::function<void()>;
-    using MonitoredDataRegistry = std::map<DataType, std::tuple<int, int, ProxyFunction>>;
+        struct DataRefresherEntry {
+            UpdaterCb updater;
+            NotifierCb notifier;
+            int interval;
+            int tick;
+        };
 
-    std::thread _thread;
-    bool _running;
-    MonitoredDataRegistry _dataToMonitor;
+        std::thread _thread;
+        bool _running;
+
+        using MonitoredDataRegistry = std::map<DataType, DataRefresherEntry>;
+        MonitoredDataRegistry _dataToMonitor;
 };
 
 } // proxy

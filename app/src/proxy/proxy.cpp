@@ -17,8 +17,13 @@
 
 namespace proxy {
 
-Proxy::Proxy(Hal* hal)
-    : _hal(hal) {
+Proxy::Proxy(Hal* hal, EventManager* eventManager)
+    : _hal(hal), _eventManager(eventManager) {
+
+    getTemperature(true);
+    getHumidity(true);
+    getPressure(true);
+    getAirQuality(true);
 
     startAutomatedDataRefresh();
 }
@@ -27,91 +32,166 @@ Proxy::~Proxy() {
     _dataRefresher.stop();
 }
 
-float Proxy::getTemperature() {
-    std::lock_guard<std::mutex> lock(_mutex);
-
-    if (const auto sensor = _hal->getSensor(Sensors::BME680)) {
-        const auto bme680 = static_cast<ItfBME680*>(sensor);
-
-        auto temp = bme680->getTemperature();
-        if (temp != _model.getTemperature()) {
-            _model.setTemperature(temp);
-
-            Log::info("Proxy -- Temperature updated to %f", temp);
-            // emit
-        }
-    }
+float Proxy::getTemperature(const bool update) {
+    if (update) tryTemperatureUpdate();
 
     return _model.getTemperature();
 }
 
-float Proxy::getHumidity() {
+bool Proxy::tryTemperatureUpdate() {
+    Log::debug("Proxy -- Temperature update attempt");
+
     std::lock_guard<std::mutex> lock(_mutex);
 
-    if (const auto sensor = _hal->getSensor(Sensors::BME680)) {
+    const auto sensor = _hal->getSensor(Sensors::BME680);
+    if (sensor) {
         const auto bme680 = static_cast<ItfBME680*>(sensor);
 
-        auto hum = bme680->getHumidity();
-        if (hum != _model.getHumidity()) {
-            _model.setHumidity(hum);
-
-            Log::info("Proxy -- Humidity updated to %f", hum);
-            // emit
+        auto newTemp = bme680->getTemperature();
+        if (_model.getTemperature() != newTemp) {
+            _model.setTemperature(newTemp);
+            return true;
         }
+
+        Log::debug("Proxy -- Temperature update failed: no change");
+
+    } else {
+        Log::error("Proxy -- Temperature update failed: no BME680 sensor");
     }
+
+    return false;
+}
+
+void Proxy::notifyTemperatureUpdated() const {
+    Log::debug("Proxy -- Notify temperature updated");
+
+    _eventManager->emit(EventManager::Signal::TEMPERATURE_UPDATED);
+}
+
+float Proxy::getHumidity(const bool update) {
+    if (update) tryHumidityUpdate();
 
     return _model.getHumidity();
 }
 
-float Proxy::getPressure() {
+bool Proxy::tryHumidityUpdate() {
+    Log::debug("Proxy -- Humidity update attempt");
+
     std::lock_guard<std::mutex> lock(_mutex);
 
-    if (const auto sensor = _hal->getSensor(Sensors::BME680)) {
+    const auto sensor = _hal->getSensor(Sensors::BME680);
+    if (sensor) {
         const auto bme680 = static_cast<ItfBME680*>(sensor);
 
-        auto press = bme680->getPressure();
-        if (press != _model.getPressure()) {
-            _model.setPressure(press);
-
-            Log::info("Proxy -- Pressure updated to %f", press);
-            // emit
+        auto newHum = bme680->getHumidity();
+        if (_model.getHumidity() != newHum) {
+            _model.setHumidity(newHum);
+            return true;
         }
+
+        Log::debug("Proxy -- Humidity update failed: no change");
+
+    } else {
+        Log::error("Proxy -- Humidity update failed: no BME680 sensor");
     }
+
+    return false;
+}
+
+void Proxy::notifyHumidityUpdated() const {
+    Log::debug("Proxy -- Notify humidity updated");
+
+    _eventManager->emit(EventManager::Signal::HUMIDITY_UPDATED);
+}
+
+float Proxy::getPressure(const bool update) {
+    if (update) tryPressureUpdate();
 
     return _model.getPressure();
 }
 
-float Proxy::getAirQuality() {
+bool Proxy::tryPressureUpdate() {
+    Log::debug("Proxy -- Pressure update attempt");
+
     std::lock_guard<std::mutex> lock(_mutex);
 
-    if (const auto sensor = _hal->getSensor(Sensors::BME680)) {
+    const auto sensor = _hal->getSensor(Sensors::BME680);
+    if (sensor) {
         const auto bme680 = static_cast<ItfBME680*>(sensor);
 
-        auto airQuality = bme680->getAirQuality();
-        if (airQuality != _model.getAirQuality()) {
-            _model.setAirQuality(airQuality);
-
-            Log::info("Proxy -- Air Quality updated to %f", airQuality);
-            // emit
+        auto newPress = bme680->getPressure();
+        if (_model.getPressure() != newPress) {
+            _model.setPressure(newPress);
+            return true;
         }
+
+        Log::debug("Proxy -- Pressure update failed: no change");
+
+    } else {
+        Log::error("Proxy -- Pressure update failed: no BME680 sensor");
     }
+
+    return false;
+}
+
+void Proxy::notifyPressureUpdated() const {
+    Log::debug("Proxy -- Notify pressure updated");
+
+    _eventManager->emit(EventManager::Signal::PRESSURE_UPDATED);
+}
+
+float Proxy::getAirQuality(const bool update) {
+    if (update) tryAirQualityUpdate();
 
     return _model.getAirQuality();
 }
 
+bool Proxy::tryAirQualityUpdate() {
+    Log::debug("Proxy -- Air quality update attempt");
+
+    std::lock_guard<std::mutex> lock(_mutex);
+
+    const auto sensor = _hal->getSensor(Sensors::BME680);
+    if (sensor) {
+        const auto bme680 = static_cast<ItfBME680*>(sensor);
+
+        auto newAirQ = bme680->getAirQuality();
+        if (_model.getAirQuality() != newAirQ) {
+            _model.setAirQuality(newAirQ);
+            return true;
+        }
+
+        Log::debug("Proxy -- Air quality update failed: no change");
+
+    } else {
+        Log::error("Proxy -- Air quality update failed: no BME680 sensor");
+    }
+
+    return false;
+}
+
+void Proxy::notifyAirQualityUpdated() const {
+    Log::debug("Proxy -- Notify air quality updated");
+
+    _eventManager->emit(EventManager::Signal::AIR_QUALITY_UPDATED);
+}
+
 void Proxy::startAutomatedDataRefresh() {
-    _dataRefresher.newEntry(DataType::TEMPERATURE, 1, [this]() {
-        (void) this->getTemperature();
-    });
-    _dataRefresher.newEntry(DataType::HUMIDITY, 2, [this]() {
-        (void) this->getHumidity();
-    });
-    _dataRefresher.newEntry(DataType::PRESSURE, 5, [this]() {
-        (void) this->getPressure();
-    });
-    _dataRefresher.newEntry(DataType::AIR_QUALITY, 10, [this]() {
-        (void) this->getAirQuality();
-    });
+    _dataRefresher.newEntry(DataType::TEMPERATURE, 3,
+        [this]() { return this->tryTemperatureUpdate(); },
+        [this]() { this->notifyTemperatureUpdated(); });
+
+    _dataRefresher.newEntry(DataType::HUMIDITY, 6,
+        [this]() { return this->tryHumidityUpdate(); },
+        [this]() { this->notifyHumidityUpdated(); });
+
+    _dataRefresher.newEntry(DataType::PRESSURE, 12,
+        [this]() { return this->tryPressureUpdate(); },
+        [this]() { this->notifyPressureUpdated(); });
+
+    _dataRefresher.newEntry(DataType::AIR_QUALITY, 24,
+        [this]() { return this->tryAirQualityUpdate(); },
+        [this]() { this->notifyAirQualityUpdated(); });
 
     _dataRefresher.start();
 }

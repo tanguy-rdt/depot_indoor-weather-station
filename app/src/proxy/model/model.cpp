@@ -6,6 +6,7 @@
  */
 
 #include "model.h"
+#include "log.h"
 
 namespace proxy {
 
@@ -24,32 +25,36 @@ float Model::getTemperature() const {
     return _temp;
 }
 
-void Model::setTemperature(float temp) {
+void Model::setTemperature(const float temp) {
     _temp = temp;
+    Log::debug("Model -- Temperature set to %f", _temp);
 }
 
 float Model::getHumidity() const {
     return _hum;
 }
 
-void Model::setHumidity(float hum) {
+void Model::setHumidity(const float hum) {
     _hum = hum;
+    Log::debug("Model -- Humidity set to %f", _hum);
 }
 
 float Model::getPressure() const {
     return _press;
 }
 
-void Model::setPressure(float press) {
+void Model::setPressure(const float press) {
     _press = press;
+    Log::debug("Model -- Pressure set to %f", _press);
 }
 
 float Model::getAirQuality() const {
     return _airQuality;
 }
 
-void Model::setAirQuality(float airQuality) {
+void Model::setAirQuality(const float airQuality) {
     _airQuality = airQuality;
+    Log::debug("Model -- Air quality set to %f", _airQuality);
 }
 
 } // proxy

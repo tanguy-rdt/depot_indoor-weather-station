@@ -9,6 +9,7 @@
 #define PROXY_H
 
 #include <mutex>
+#include <event_manager/event_manager.h>
 
 #include "hal/hal.h"
 #include "model/model.h"
@@ -18,13 +19,24 @@ namespace proxy {
 
 class Proxy {
     public:
-        Proxy(Hal* hal);
+        Proxy(Hal* hal, EventManager* eventManager);
         ~Proxy();
 
-        float getTemperature();
-        float getHumidity();
-        float getPressure();
-        float getAirQuality();
+        float getTemperature(bool update = false);
+        bool tryTemperatureUpdate();
+        void notifyTemperatureUpdated() const;
+
+        float getHumidity(bool update = false);
+        bool tryHumidityUpdate();
+        void notifyHumidityUpdated() const;
+
+        float getPressure(bool update = false);
+        bool tryPressureUpdate();
+        void notifyPressureUpdated() const;
+
+        float getAirQuality(bool update = false);
+        bool tryAirQualityUpdate();
+        void notifyAirQualityUpdated() const;
 
     private:
         void startAutomatedDataRefresh();
@@ -32,8 +44,9 @@ class Proxy {
         mutable std::mutex _mutex;
 
         Hal* _hal;
-        DataRefresher _dataRefresher;
         Model _model;
+        DataRefresher _dataRefresher;
+        EventManager* _eventManager;
 };
 
 } // proxy

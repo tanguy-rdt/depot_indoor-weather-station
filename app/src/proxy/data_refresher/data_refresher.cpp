@@ -33,20 +33,31 @@ void DataRefresher::stop() {
     }
 }
 
-void DataRefresher::newEntry(DataType dataType, int interval, std::function<void()> proxyFunction) {
+void DataRefresher::newEntry(DataType dataType, const int interval, const UpdaterCb& updater, const NotifierCb& notifier) {
     Log::debug("DataRefresher -- New entry for data type %s", tools::dataTypeToString(dataType).c_str());
-    _dataToMonitor.emplace(dataType, std::make_tuple(interval, 0, proxyFunction));
+
+    DataRefresherEntry entry = {
+        .updater = updater,
+        .notifier = notifier,
+        .interval = interval,
+        .tick = 0
+    };
+
+    _dataToMonitor.emplace(dataType,entry);
 }
 
 void DataRefresher::run() {
     Log::info("DataRefresher -- Running");
 
     while (_running) {
-        for (auto& [dataType, data] : _dataToMonitor) {
-            data = std::make_tuple(std::get<0>(data), std::get<1>(data) + 1, std::get<2>(data));
-            if (std::get<1>(data) >= std::get<0>(data)) {
-                std::get<2>(data)();
-                std::get<1>(data) = 0;
+        for (auto& [dataType, entry] : _dataToMonitor) {
+            if (entry.tick == entry.interval) {
+                entry.tick = 0;
+                if (entry.updater()) {
+                    entry.notifier();
+                }
+            } else {
+                entry.tick++;
             }
         }
 
