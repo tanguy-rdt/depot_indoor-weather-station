@@ -30,7 +30,7 @@ int main() {
       Log::level(LogLevel::Info);
    #endif
 
-   Hal hal;
+   Hal hal(&eventManager);
    hal.init();
 
    Proxy proxy(&hal, &eventManager);

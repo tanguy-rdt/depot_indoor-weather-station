@@ -13,33 +13,33 @@
 class EventManager {
 
     public:
-      EventManager() = default;
-      ~EventManager() = default;
+		EventManager() = default;
+		~EventManager() = default;
 
-      enum class Signal {
-          TEMPERATURE_UPDATED,
-          HUMIDITY_UPDATED,
-          PRESSURE_UPDATED,
-          AIR_QUALITY_UPDATED,
-          LEFT_BUTTON_PRESSED,
-          RIGHT_BUTTON_PRESSED,
-          OK_BUTTON_PRESSED,
-      };
+		enum class Signal {
+			TEMPERATURE_UPDATED,
+			HUMIDITY_UPDATED,
+			PRESSURE_UPDATED,
+			AIR_QUALITY_UPDATED,
+			GUI_UPDATED,
+			LEFT_BUTTON_PRESSED,
+			RIGHT_BUTTON_PRESSED,
+			OK_BUTTON_PRESSED,
+		};
 
-      void connect(Signal sig, std::function<void()> cb);
-      void emit(Signal sig);
+		void connect(Signal sig, std::function<void()> cb);
+		void emit(Signal sig);
 
     private:
         sigslot::signal<> _temperatureUpdated;
         sigslot::signal<> _humidityUpdated;
         sigslot::signal<> _pressureUpdated;
         sigslot::signal<> _airQualityUpdated;
+		sigslot::signal<> _guiUpdated;
         sigslot::signal<> _leftButtonPressed;
         sigslot::signal<> _rightButtonPressed;
         sigslot::signal<> _okButtonPressed;
 
 };
-
-
 
 #endif //EVENT_MANAGER_H

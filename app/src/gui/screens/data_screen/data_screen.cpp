@@ -6,7 +6,7 @@
 #include "gui_conf_internal.h"
 #include "log.h"
 
-namespace gui {
+namespace screens {
 
 DataScreen::DataScreen(Proxy* proxy, EventManager* eventManager)
     : _proxy(proxy), _eventManager(eventManager) {
@@ -91,6 +91,7 @@ DataScreen::DataScreen(Proxy* proxy, EventManager* eventManager)
     });
 
     _currentDataTypeScreen = DataType::TEMPERATURE;
+    showData(_currentDataTypeScreen);
 }
 
 DataScreen::~DataScreen() {
@@ -104,9 +105,22 @@ DataScreen::~DataScreen() {
     lv_obj_del(_screen);
 }
 
-DataScreen::Screen *DataScreen::getScreen() const {
-    return _screen;
+void DataScreen::show(ScreenName screenName) {
+    if (screenName == ScreenName::DATA_SCREEN) {
+        lv_scr_load(_screen);
+        showData(DataType::TEMPERATURE);
+    } else {
+        if ( lv_scr_act() != _screen )
+            lv_scr_load(_screen);
+
+        screenName == ScreenName::DATA_SCREEN_TEMPERATURE ? showData(DataType::TEMPERATURE) :
+        screenName == ScreenName::DATA_SCREEN_HUMIDITY    ? showData(DataType::HUMIDITY)    :
+        screenName == ScreenName::DATA_SCREEN_PRESSURE    ? showData(DataType::PRESSURE)    :
+        screenName == ScreenName::DATA_SCREEN_AIR_QUALITY ? showData(DataType::AIR_QUALITY) :
+            Log::warn("DataScreen::show: unknown screen name");
+    }
 }
+
 
 void DataScreen::showData(DataType dataType) {
     Log::debug("DataScreen::showData -- %s", tools::dataTypeToString(dataType).c_str());
@@ -129,7 +143,7 @@ void DataScreen::showData(DataType dataType) {
     _currentDataTypeScreen = dataType;
 }
 
-void DataScreen::update(DataType dataType) {
+void DataScreen::update(DataType dataType) const {
     auto value = dataType == DataType::TEMPERATURE ? _proxy->getTemperature() :
                     dataType == DataType::HUMIDITY    ? _proxy->getHumidity()    :
                     dataType == DataType::PRESSURE    ? _proxy->getPressure()    :

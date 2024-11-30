@@ -61,6 +61,7 @@ set(SRC
     ${SRC_DIR}/gui/fonts/roboto_60.c
     ${SRC_DIR}/gui/fonts/roboto_70.c
     ${SRC_DIR}/gui/nav_controller/nav_ctrl.cpp
+    ${SRC_DIR}/gui/screens/screens_manager.cpp
     ${SRC_DIR}/gui/screens/data_screen/data_screen.cpp
     ${SRC_DIR}/gui/widgets/circular_indicator/circular_indicator.cpp
     ${SRC_DIR}/event_manager/event_manager.cpp

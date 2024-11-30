@@ -2,28 +2,31 @@
 #define DATA_SCREEN_H
 
 #include <map>
+
 #include "lvgl.h"
 
+#include "itf_screens.h"
 #include "circular_indicator.h"
 #include "proxy/proxy.h"
 #include "data_type.h"
+#include <screens_manager.h>
+#include "screens_name.h"
 
 using namespace proxy;
 
-namespace gui {
+namespace screens {
+class ScreensManager;
 
-class DataScreen {
+class DataScreen: public ItfScreens {
     public:
         DataScreen(Proxy* proxy, EventManager* eventManager);
         ~DataScreen();
 
-        using Screen = lv_obj_t;
-
-        Screen* getScreen() const;
-        void showData(DataType dataTypes);
+        void show(ScreenName screenName);
 
     private:
-        void update(DataType dataType);
+        void showData(DataType dataTypes);
+        void update(DataType dataType) const;
 
         DataType _currentDataTypeScreen;
 

@@ -1,12 +1,15 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include "screens/data_screen/data_screen.h"
 #include "proxy/proxy.h"
+#include "event_manager/event_manager.h"
+#include "nav_controller/nav_ctrl.h"
+#include "screens/screens_manager.h"
 
 using namespace proxy;
 
 namespace gui {
+using namespace screens;
 
 class Gui {
 
@@ -17,9 +20,11 @@ class Gui {
         void init();
 
     private:
+
+        NavCtrl* _navCtrl;
         EventManager* _eventManager;
         Proxy* _proxy;
-        DataScreen* _dataScreen;
+        ScreensManager* _screensManager;
 };
 
 } // gui

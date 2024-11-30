@@ -8,7 +8,22 @@ namespace gui {
 Gui::Gui(Proxy* proxy, EventManager* eventManager)
     : _proxy(proxy), _eventManager(eventManager) {
 
-    _dataScreen = new DataScreen(_proxy, _eventManager);
+    _screensManager = new ScreensManager(proxy, _eventManager);
+    _screensManager->show(ScreenName::DATA_SCREEN_TEMPERATURE);
+
+    _navCtrl = new NavCtrl(_screensManager);
+
+    // _dataScreen = new DataScreen(_proxy, _eventManager);
+
+    // _navCtrl.registerNewScreen(_dataScreen->getScreen());
+
+    _eventManager->connect(EventManager::Signal::RIGHT_BUTTON_PRESSED, [this]() {
+        _navCtrl->next();
+    });
+    //
+    _eventManager->connect(EventManager::Signal::LEFT_BUTTON_PRESSED, [this]() {
+        _navCtrl->prev();
+    });
 }
 
 Gui::~Gui() {
@@ -16,8 +31,11 @@ Gui::~Gui() {
 }
 
 void Gui::init() {
-    lv_scr_load(_dataScreen->getScreen());
-    _dataScreen->showData(DataType::TEMPERATURE);
+    // _navCtrl.next();
+    _eventManager->emit(EventManager::Signal::GUI_UPDATED);
 }
+
+
+
 
 } // gui

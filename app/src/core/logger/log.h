@@ -81,7 +81,7 @@ inline void error(const std::string& msg, ...) {
 inline void critical(const std::string& msg, ...) {
     va_list args;
     va_start(args, msg);
-    Core::Logger::log(LogLevel::Error, msg, args);
+    Core::Logger::log(LogLevel::Critical, msg, args);
     va_end(args);
 }
 
