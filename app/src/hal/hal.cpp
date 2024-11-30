@@ -7,9 +7,9 @@
 #endif
 
 
-Hal::Hal() {
+Hal::Hal(EventManager* eventManager) {
     #ifdef STUB
-        _hal = std::make_unique<HalStub>();
+        _hal = new HalStub(eventManager);
     #endif
 }
 

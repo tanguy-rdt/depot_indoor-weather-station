@@ -49,6 +49,8 @@ set(SRC
     ${SRC_DIR}/hal/hal_stub/display/display.cpp
     ${SRC_DIR}/hal/hal_stub/display/background/simu_bg_black.c
     ${SRC_DIR}/hal/hal_stub/display/background/simu_bg_white.c
+    ${SRC_DIR}/hal/hal_stub/keyboard/keyboard_ui_shortcut.cpp
+    ${SRC_DIR}/hal/hal_stub/mouse/mouse.cpp
     ${SRC_DIR}/hal/hal_stub/sensors/bme680/bme_680.cpp
     ${SRC_DIR}/proxy/proxy.cpp
     ${SRC_DIR}/proxy/model/model.cpp
@@ -58,6 +60,7 @@ set(SRC
     ${SRC_DIR}/gui/fonts/roboto_50.c
     ${SRC_DIR}/gui/fonts/roboto_60.c
     ${SRC_DIR}/gui/fonts/roboto_70.c
+    ${SRC_DIR}/gui/nav_controller/nav_ctrl.cpp
     ${SRC_DIR}/gui/screens/data_screen/data_screen.cpp
     ${SRC_DIR}/gui/widgets/circular_indicator/circular_indicator.cpp
     ${SRC_DIR}/event_manager/event_manager.cpp
@@ -73,12 +76,16 @@ set(INCLUDE_DIRS
     ${SRC_DIR}/hal/hal_stub
     ${SRC_DIR}/hal/hal_stub/display
     ${SRC_DIR}/hal/hal_stub/display/background
+    ${SRC_DIR}/hal/hal_stub/keyboard
+    ${SRC_DIR}/hal/hal_stub/mouse
     ${SRC_DIR}/hal/hal_stub/sensors/bme680/
     ${SRC_DIR}/proxy
     ${SRC_DIR}/proxy/model
     ${SRC_DIR}/proxy/data_refresher
     ${SRC_DIR}/gui
+    ${SRC_DIR}/gui/nav_controller
     ${SRC_DIR}/gui/common
+    ${SRC_DIR}/gui/screens
     ${SRC_DIR}/gui/screens/data_screen
     ${SRC_DIR}/gui/widgets
     ${SRC_DIR}/gui/widgets/circular_indicator

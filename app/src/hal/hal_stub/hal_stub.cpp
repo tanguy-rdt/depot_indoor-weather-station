@@ -21,8 +21,14 @@ static void* tick_thread(void *data) {
 }
 
 
-HalStub::HalStub() {
-    _display = std::make_unique<Display>();
+HalStub::HalStub(EventManager* eventManager) {
+    _display = new Display();
+    _mouse = new Mouse();
+    _keyboardUiShortcut = new KeyboardUiShortcut(eventManager);
+
+    eventManager->connect(EventManager::Signal::GUI_UPDATED, [this]() {
+        _keyboardUiShortcut->renewParent();
+    });
 }
 
 HalStub::~HalStub() {
@@ -30,8 +36,6 @@ HalStub::~HalStub() {
 }
 
 void HalStub::init() {
-    _display->init();
-
     END_TICK = false;
     pthread_create(&THR_TICK, NULL, tick_thread, NULL);
 }

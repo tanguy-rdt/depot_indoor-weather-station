@@ -1,10 +1,11 @@
 #ifndef HAL_STUB_H
 #define HAL_STUB_H
 
-#include <memory>
-
 #include "itf_hal.h"
 #include "display.h"
+#include "mouse.h"
+#include "keyboard_ui_shortcut.h"
+#include "event_manager/event_manager.h"
 
 #include "common/itf_sensor.h"
 #include "common/sensor_availability.h"
@@ -15,7 +16,7 @@
 class HalStub: public ItfHal {
 
 public:
-    HalStub();
+    HalStub(EventManager* eventManager);
     ~HalStub();
 
     void init();
@@ -23,7 +24,10 @@ public:
     ItfSensor* getSensor(Sensors sensor) override;
 
 private:
-    std::unique_ptr<Display> _display;
+    Display* _display;
+    Mouse* _mouse;
+    KeyboardUiShortcut* _keyboardUiShortcut;
+
     sensors::BME680 _bme680;
 };
 
